@@ -162,10 +162,6 @@ class  Ntxuva:
 
 		captured_stones = 0
 
-		counter = 0
-
-		old_board = self.board
-
 		while True:
 
 			while stones > 0:
@@ -184,21 +180,7 @@ class  Ntxuva:
 				self.board[current_pos] = 0
 
 
-		new_board = self.board
-
-		if np.array_equal(old_board, new_board):
-			counter += 1
-		else:
-			counter = 0
-
-		if counter == 20:
-			print(f"same board configuration found")
-			print(f"old board {old_board}")
-			print(f"new board {new_board}")
-			exit(1)
-
-		new_board = old_board
-
+		
 		is_terminal = self.is_terminal_state()
 		self.change_turn()
 		#return self.make_key(), captured_stones , is_terminal
