@@ -1,6 +1,5 @@
 import unittest
 
-from players import QPlayer
 
 class MyTestCase(unittest.TestCase):
 
