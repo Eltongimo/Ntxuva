@@ -1,11 +1,10 @@
-import math
-import json
-
-
 class EloRater:
 
-    def __init__(self):
-        pass
+    def __init__(self, player1, player2, K=20):
+        self.d = {player1: 1,
+                  player2: 2,
+                  None: 0}
+        self.K =K
 
     def calculate_probability(self, ra, rb):
         return 1 / (1 + pow(10, (ra -rb)/400))
@@ -17,17 +16,20 @@ class EloRater:
     #   1 - if player1 won
     #   2 - if player2 won
 
-    def new_rating(self, ra, rb, d,K=40):
+    def new_rating(self, ra, rb, d):
 
         pa = self.calculate_probability(ra,rb)
         pb = self.calculate_probability(rb,ra)
 
         if d == 1:
-            ra = ra + K * (1 - pa)
-            rb = rb + K * (0 - pb)
+            ra = ra + self.K * (1 - pa)
+            rb = rb + self.K * (0 - pb)
         elif d == 2:
-            ra = ra + K * (0 - pa)
-            rb = rb + K * (1 - pb)
+            ra = ra + self.K * (0 - pa)
+            rb = rb + self.K * (1 - pb)
         else:
-            ra = ra + K * (0.5 - pa)
-            rb = rb + K * (0.5 - pb)
+            ra = ra + self.K * (0.5 - pa)
+            rb = rb + self.K * (0.5 - pb)
+
+        return round(ra,2),round(rb,2)
+

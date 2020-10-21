@@ -14,6 +14,7 @@ class DqnAgent(ComputerPlayer,RLAgent):
         self.state_size = state_size
         self.memory = deque(maxlen=memory_len)
         self.model = self.build_model(hidden_layers=1)
+        self.player_name = "dqn"
 
     def build_model(self, hidden_layers,input_layer_activation='relu',
                     hidden_layer_activation='relu', output_layer_activation='linear',
@@ -43,8 +44,8 @@ class DqnAgent(ComputerPlayer,RLAgent):
         move = self.act(np.reshape(board.grid, [1, board.ROWS * board.COLUMNS]))
         return move
 
-    def save_model(self, path):
-        self.model.save(filepath=path)
+    def save_model(self):
+        self.model.save(filepath=f"{self.player_name}.h5")
 
     def load_model(self, path):
         return load_model(filepath=path)

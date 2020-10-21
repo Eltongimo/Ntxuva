@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 
 class RLAgent:
     def __init__(self, alpha, gamma, EPSILON, EPSILON_DECAY, EPSILON_MIN, action_size):
@@ -10,14 +11,19 @@ class RLAgent:
         self.action_size = action_size
 
 class ComputerPlayer:
-    def __init__(self, mark, rating):
+    def __init__(self, mark):
         self.mark = mark
-        self.rating = rating
         self.positions = self.full_map_action_to_position(mark)
         self.wins = 0
         self.player_name = ''
 
     def update_agent_policy(self,ntxuva, moved , action, captures ):
+        pass
+
+    def save_model(self):
+        pass
+
+    def load_model(self):
         pass
 
     def full_map_action_to_position(self, mark):
@@ -34,10 +40,9 @@ class ComputerPlayer:
         return q
 
 class RandomPlayer(ComputerPlayer):
-    def __init__(self, mark, rating):
-        super().__init__(mark=mark, rating=rating)
+    def __init__(self, mark):
+        super().__init__(mark=mark)
         self.player_name = 'random'
-
 
     def get_move(self, board):
         moves = board.available_moves(self.mark)
@@ -46,8 +51,8 @@ class RandomPlayer(ComputerPlayer):
                 len(moves))]  # Apply random selection to the index, as otherwise it will be seen as a 2D array
 
 class QPlayer(ComputerPlayer, RLAgent):
-    def __init__(self, mark, rating,alpha=0.1, gamma=0.88, Q={}, action_space=16, elo_filename='Qpleyar'):
-        ComputerPlayer.__init__(self,mark=mark, rating=rating)
+    def __init__(self, mark,alpha=0.1, gamma=0.88, Q={}, action_space=16):
+        ComputerPlayer.__init__(self,mark=mark)
         RLAgent.__init__(self,alpha=alpha, gamma=gamma,EPSILON=1, EPSILON_DECAY=0.9999,
                          EPSILON_MIN=0.0001, action_size=action_space)
         self.Q = Q
@@ -110,3 +115,10 @@ class QPlayer(ComputerPlayer, RLAgent):
             self.update_policy(state=old_state, new_state=new_state, new_state_qs=new_state_qs,
                                  action=action,
                                  reward=-1)
+
+    def save_model(self):
+        pickle.dump(self.Q,open(f"{self.player_name}.p","wb"))
+        print ("Q table has been saved!")
+
+    def load_model(self,filepath):
+        return pickle.load(open(f"{filepath}",'rb'))
