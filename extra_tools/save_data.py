@@ -1,32 +1,27 @@
 import json
-# from agents.dqn.dqn import DqnAgent
+import pickle
+
 class Save_data:
 
-    def __init__(self, player1, player2):
+    def __init__(self, player1, player2, filename):
         self.player1 = player1
         self.player2 = player2
-        self.dic = {
+        self.filename = filename
 
-        }
-
-    def save(self, players ):
+    def save(self, players, ratings):
         self.save_win_rate(player1_win=players[1].wins,player2_win=players[2].wins)
         self.save_models(players)
+        self.save_elo(filenames={1: players[1].player_name, 2: players[1].player_name}, data=ratings)
 
     def save_win_rate(self,player1_win, player2_win):
-        with open(f"{self.filename}_win_rate_data.json", 'w') as f:
-            json.dump({"player1": player1_win,
-                       "player2": player2_win
+        with open(f"{self.filename}.json", 'w') as f:
+            json.dump({f"{self.player1.player_name}": player1_win,
+                       f"{self.player2.player_name}": player2_win
                        }, f, indent=2)
 
     def save_models(self, players):
-        pass
-        # if isinstance(players[1], DqnAgent):
-        #     players[1].save_weights(f'dqn_model.h5')
-        #
-        # if isinstance(players[2], DqnAgent):
-        #     players[2].save_weights(f'dqn_model.h5')
-
+        for index in players:
+            pickle.dump(players[index], open(f"{players[index].player_name}.p","wb"))
 
     def load_data(self, path):
         try:
